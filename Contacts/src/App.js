@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ListContacts from './ListContacts'
+import CreateContact from './CreateContact'
 import * as ContactAPI from './utils/ContactsAPI'
 
 // const contacts = [
@@ -24,6 +25,7 @@ import * as ContactAPI from './utils/ContactsAPI'
 
 class App extends Component {
   state = {
+      screen : 'list', //list,create
     contacts : [
       // {
       //   "id": "ryan",
@@ -62,7 +64,24 @@ class App extends Component {
     )
   }
 
-  getAll = () => {
+    navigationToCreate = () => {
+        this.setState((state) => (
+          {
+              screen : 'create'
+          }
+          )
+        )
+    }
+
+    addContact = (contact) => {
+        ContactAPI.create(contact).then(
+            (data) => {
+                this.getAll()
+            }
+        )
+    }
+
+    getAll = () => {
       ContactAPI.getAll().then(
           (contacts) => {
               this.setState({contacts})
@@ -99,7 +118,12 @@ class App extends Component {
   render() {
     return (
       <div>
-        <ListContacts onDeleteContact={this.removeContact} contacts={this.state.contacts}/>
+          {(this.state.screen === 'list' && (
+              <ListContacts onDeleteContact={this.removeContact} onAddContact={this.navigationToCreate} contacts={this.state.contacts}/>
+          ))}
+          {(this.state.screen === 'create' && (
+              <CreateContact></CreateContact>
+          ))}
       </div>
     )
   }

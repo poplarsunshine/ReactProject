@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Route} from 'react-router-dom'
 import ListContacts from './ListContacts'
 import CreateContact from './CreateContact'
 import * as ContactAPI from './utils/ContactsAPI'
@@ -64,52 +65,41 @@ class App extends Component {
     )
   }
 
-    navigationToCreate = () => {
-        this.setState((state) => (
-          {
-              screen : 'create'
-          }
-          )
-        )
-    }
-
-    addContact = (contact) => {
-        ContactAPI.create(contact).then(
-            (data) => {
-                this.getAll()
-            }
-        )
-    }
-
-    getAll = () => {
-      ContactAPI.getAll().then(
-          (contacts) => {
-              this.setState({contacts})
-          }
-      )
+  addContact = (contact) => {
+    ContactAPI.create(contact).then(
+      (data) => {
+          this.getAll()
+      }
+    )
   }
 
-    componentWillMount(){
-      console.log("componentWillMount");
-    }
-    componentWillUnmount() {
-        console.log("componentWillUnmount");
-    }
-    componentWillReceiveProps() {
-        console.log("componentWillReceiveProps");
-    }
-    shouldComponentUpdate() {
-        console.log("shouldComponentUpdate");
-        return true;
-    }
-    componentWillUpdate() {
-        console.log("componentWillUpdate");
-    }
-    componentDidUpdate() {
-        console.log("componentDidUpdate");
-    }
+  getAll = () => {
+    ContactAPI.getAll().then(
+      (contacts) => {
+          this.setState({contacts})
+      }
+    )
+  }
 
-
+  componentWillMount(){
+    console.log("componentWillMount");
+  }
+  componentWillUnmount() {
+      console.log("componentWillUnmount");
+  }
+  componentWillReceiveProps() {
+      console.log("componentWillReceiveProps");
+  }
+  shouldComponentUpdate() {
+      console.log("shouldComponentUpdate");
+      return true;
+  }
+  componentWillUpdate() {
+      console.log("componentWillUpdate");
+  }
+  componentDidUpdate() {
+      console.log("componentDidUpdate");
+  }
   componentDidMount() {
       console.log("componentDidMount");
       this.getAll();
@@ -118,12 +108,20 @@ class App extends Component {
   render() {
     return (
       <div>
-          {(this.state.screen === 'list' && (
-              <ListContacts onDeleteContact={this.removeContact} onAddContact={this.navigationToCreate} contacts={this.state.contacts}/>
-          ))}
-          {(this.state.screen === 'create' && (
-              <CreateContact></CreateContact>
-          ))}
+          <Route exact path='/' render={()=>(
+            <ListContacts
+            contacts={this.state.contacts}
+            onDeleteContact={this.removeContact}
+            />
+          )}/>
+          <Route path='/create' render={({ history })=>(
+            <CreateContact
+              onCreateContact={(contact) => {
+                this.addContact(contact)
+                history.push('/')
+              }}
+            />
+          )}/>
       </div>
     )
   }

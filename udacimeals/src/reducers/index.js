@@ -1,3 +1,4 @@
+import {combineReducers} from 'redux'
 import {
   ADD_PRCIPE,
   REMOVE_FROM_CALENDAR
@@ -10,7 +11,7 @@ const initialCalendarState = {
     dinner: null,
   },
   monday: {
-    breakfast: null,
+    breakfast: 'pizza',
     lunch: null,
     dinner: null,
   },
@@ -41,7 +42,9 @@ const initialCalendarState = {
   },
 }
 
-function calendar (state = initialCalendarState, action) {
+function rili (state = initialCalendarState, action) {
+  console.log('calendar fun:' + state);
+
   const {day, meal, recipe} = action;
 
   switch (action.type) {
@@ -65,3 +68,9 @@ function calendar (state = initialCalendarState, action) {
       return state;
   }
 }
+
+export default combineReducers(
+  {
+    rili
+  }
+)
